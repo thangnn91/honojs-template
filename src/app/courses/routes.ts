@@ -6,27 +6,27 @@ import { Env, CoursesByFaculty, CareerReferences, CoursesByCareer, Course } from
 
 const courses = new Hono<{ Bindings: Env }>()
 
-courses.get('/allCourses', async (c) => {
+courses.get('/all-courses', async (c) => {
     let allCourses = await c.env.FILES.get("allCourses");
     console.log(allCourses)
     allCourses = JSON.parse(allCourses!);
     return c.json({ 'courses': allCourses });
 })
 
-courses.get('/byFaculty', async (c) => {
+courses.get('/by-faculty', async (c) => {
     let allCourses = await c.env.FILES.get("allCoursesByF");
     allCourses = JSON.parse(allCourses!);
     return c.json({ 'courses': allCourses });
 })
 
-courses.get('/byFaculty/:facultyCode', async (c) => {
+courses.get('/by-faculty/:faculty-code', async (c) => {
     const code = c.req.param('facultyCode');
     const res = await c.env.FILES.get("allCoursesByF");
     const allCourses = JSON.parse(res!) as CoursesByFaculty;
-    return c.json({'content': allCourses[code]})
+    return c.json({ 'content': allCourses[code] })
 
 })
-courses.get('/byCareer/:careerCode', async (c) => {
+courses.get('/by-career/:career-code', async (c) => {
     const code = c.req.param('careerCode');
     const res1 = await c.env.FILES.get("careersReference");
     const careerReference = JSON.parse(res1!) as CareerReferences;
@@ -37,11 +37,11 @@ courses.get('/byCareer/:careerCode', async (c) => {
     const courses = allCourses[faculty]['careers'][code]['courses']
     console.log(faculty)
     console.log(courses)
-    return c.json({'content': courses})
+    return c.json({ 'content': courses })
 })
 
 
-courses.get('/byCareer', async (c) => {
+courses.get('/by-career', async (c) => {
     let allCourses = await c.env.FILES.get("allCoursesByC");
     allCourses = JSON.parse(allCourses!);
 
@@ -49,13 +49,11 @@ courses.get('/byCareer', async (c) => {
 })
 
 
-courses.get('/:courseCode', async (c) => {
+courses.get('/:course-code', async (c) => {
     const code = c.req.param('courseCode')
     const res = await c.env.FILES.get("allCoursesByF");
     const allCourses = JSON.parse(res!) as Course;
-    
-    return c.json({'content': allCourses[code]})
-
+    return c.json({ 'content': allCourses[code] })
 })
 
 
